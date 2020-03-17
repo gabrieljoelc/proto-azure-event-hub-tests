@@ -113,5 +113,14 @@ resource "azurerm_app_service" "webjob" {
   location            = data.azurerm_resource_group.webjob.location
   resource_group_name = data.azurerm_resource_group.webjob.name
   app_service_plan_id = azurerm_app_service_plan.webjob.id
-  app_settings        = var.app_settings
+  app_settings        = {
+                          PartitionStatusTableName = "PartitionStatus",
+                          StorageConnectionString = azurerm_storage_account.webjob.primary_connection_string,
+                          StorageContainerName = "event-metadata",
+                          Settings__DbConnection="Server=tcp:${azurerm_sql_server.webjob.fully_qualified_domain_name},1433;Initial Catalog=${azurerm_sql_database.webjob.name};Persist Security Info=False;User ID=${azurerm_sql_server.webjob.administrator_login};Password=${azurerm_sql_server.webjob.administrator_login_password};MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;"
+                          Settings__Delay = 1,
+                          Settings__SkipAll = false,
+                          Settings__TestRun = 1,
+                          "Logging:LogLevel:Default" = "Trace"
+                        }
 }
