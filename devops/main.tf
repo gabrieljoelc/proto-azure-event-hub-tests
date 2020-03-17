@@ -45,19 +45,35 @@ variable "service_plan_name" {
   default     = ""
 }
 
-variable "app_settings" {
-  description = "A key-value pair of App Settings"
-  default     = {}
+variable "eh_namespace" {
+  description = "Event Hub namespace to create a test hub in"
 }
 
-variable "site_config" {
-  description = "A key-value pair for Site Config"
+variable "hub_name" {
+  description = "Event Hub hub to send test messages"
+  default     = "test-hub"
+}
 
-  default = []
+variable "partition_count" {
+  description = "Number of partitions to create the hub with"
+  default     = 32
 }
 
 data "azurerm_resource_group" "webjob" {
   name     = var.rg
+}
+
+data "azurerm_eventhub_namespace" "webjob" {
+  name = var.eh_namespace
+  resource_group_name = var.rg
+}
+
+resource "azurerm_eventhub" "webjob" {
+  name                = var.hub_name
+  namespace_name      = var.eh_namespace
+  resource_group_name = var.rg
+  partition_count     = var.partition_count
+  message_retention   = 1
 }
 
 # database for storing test runs
@@ -114,6 +130,7 @@ resource "azurerm_app_service" "webjob" {
   resource_group_name = data.azurerm_resource_group.webjob.name
   app_service_plan_id = azurerm_app_service_plan.webjob.id
   app_settings        = {
+                          EventHubConnectionString = data.azurerm_eventhub_namespace.webjob.default_primary_connection_string,
                           PartitionStatusTableName = "PartitionStatus",
                           StorageConnectionString = azurerm_storage_account.webjob.primary_connection_string,
                           StorageContainerName = "event-metadata",
