@@ -133,15 +133,40 @@ resource "azurerm_app_service" "webjob" {
   resource_group_name = data.azurerm_resource_group.webjob.name
   app_service_plan_id = azurerm_app_service_plan.webjob.id
   app_settings        = {
-                          APPINSIGHTS_INSTRUMENTATIONKEY = "${azurerm_application_insights.webjob.instrumentation_key}"
-                          EventHubConnectionString = data.azurerm_eventhub_namespace.webjob.default_primary_connection_string
-                          PartitionStatusTableName = "PartitionStatus"
-                          StorageConnectionString = azurerm_storage_account.webjob.primary_connection_string
-                          StorageContainerName = "event-metadata"
-                          Settings__DbConnection="Server=tcp:${azurerm_sql_server.webjob.fully_qualified_domain_name},1433;Initial Catalog=${azurerm_sql_database.webjob.name};Persist Security Info=False;User ID=${azurerm_sql_server.webjob.administrator_login};Password=${azurerm_sql_server.webjob.administrator_login_password};MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;"
-                          Settings__Delay = 1
-                          Settings__SkipAll = false
-                          Settings__TestRun = 1
-                          "Logging:LogLevel:Default" = "Trace"
+                          APPINSIGHTS_INSTRUMENTATIONKEY = azurerm_application_insights.webjob.instrumentation_key
+                          APPINSIGHTS_PROFILERFEATURE_VERSION        = "toignore"
+                          APPINSIGHTS_SNAPSHOTFEATURE_VERSION        = "toignore"
+                          APPLICATIONINSIGHTS_CONNECTION_STRING      = "toignore"
+                          ApplicationInsightsAgent_EXTENSION_VERSION = "toignore"
+                          AzureWebJobsDashboard          = azurerm_storage_account.webjob.primary_connection_string
+                          AzureWebJobsStorage            = azurerm_storage_account.webjob.primary_connection_string
+                          DiagnosticServices_EXTENSION_VERSION       = "toignore"
+                          EventHubConnectionString       = data.azurerm_eventhub_namespace.webjob.default_primary_connection_string
+                          EventHubName                   = var.hub_name
+                          InstrumentationEngine_EXTENSION_VERSION    = "toignore"
+                          PartitionStatusTableName       = "PartitionStatus"
+                          StorageConnectionString        = azurerm_storage_account.webjob.primary_connection_string
+                          StorageContainerName           = "event-metadata"
+                          Settings__DbConnection         = "Server=tcp:${azurerm_sql_server.webjob.fully_qualified_domain_name},1433;Initial Catalog=${azurerm_sql_database.webjob.name};Persist Security Info=False;User ID=${azurerm_sql_server.webjob.administrator_login};Password=${azurerm_sql_server.webjob.administrator_login_password};MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;"
+                          Settings__Delay                = 1
+                          Settings__SkipAll              = false
+                          Settings__TestRun              = 1
+                          SnapshotDebugger_EXTENSION_VERSION         = "toignore"
+                          "Logging:LogLevel:Default"     = "Trace"
+                          XDT_MicrosoftApplicationInsights_BaseExtensions = "toignore"
+                          XDT_MicrosoftApplicationInsights_Mode      = "toignore"
                         }
+  lifecycle {
+    ignore_changes = [
+      app_settings["APPINSIGHTS_PROFILERFEATURE_VERSION"],
+      app_settings["APPINSIGHTS_SNAPSHOTFEATURE_VERSION"],
+      app_settings["APPLICATIONINSIGHTS_CONNECTION_STRING"],
+      app_settings["ApplicationInsightsAgent_EXTENSION_VERSION"],
+      app_settings["DiagnosticServices_EXTENSION_VERSION"],
+      app_settings["InstrumentationEngine_EXTENSION_VERSION"],
+      app_settings["SnapshotDebugger_EXTENSION_VERSION"],
+      app_settings["XDT_MicrosoftApplicationInsights_BaseExtensions"],
+      app_settings["XDT_MicrosoftApplicationInsights_Mode"]
+    ]
+  }
 }

@@ -89,7 +89,7 @@ namespace EventHubConsumer
         //        message.Properties["counter"].ToString());
         //}
 
-        public async Task Run([SafeEventHubTrigger("testhub32", Connection = "EventHubConnectionString")]
+        public async Task Run([SafeEventHubTrigger("%EventHubName%", Connection = "EventHubConnectionString")]
             EventData message)
         {
             if (Settings.SkipAll) return;

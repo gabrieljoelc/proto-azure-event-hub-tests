@@ -1,6 +1,9 @@
 {
-  "APPINSIGHTS_INSTRUMENTATIONKEY": "455cf368-8e50-4ee2-be55-d5746ab3a3c2",
+  "AzureWebJobsDashboard": "UseDevelopmentStorage=true",
+  "AzureWebJobsStorage": "UseDevelopmentStorage=true",
+  "APPINSIGHTS_INSTRUMENTATIONKEY": "<instrumentation key>",
   "EventHubConnectionString": "<event hub connection string>",
+  "EventHubName": "test-hub",
   "PartitionStatusTableName": "PartitionStatus",
   "StorageConnectionString": "UseDevelopmentStorage=true",
   "StorageContainerName": "event-metadata",
