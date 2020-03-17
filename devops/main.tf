@@ -102,10 +102,13 @@ resource "azurerm_storage_account" "webjob" {
   account_tier        = "Standard"
   account_replication_type          = "LRS"
   enable_https_traffic_only         = true
+}
 
-  lifecycle {
-    prevent_destroy = true
-  }
+resource "azurerm_application_insights" "webjob" {
+  name = "${var.name}-ai"
+  location = "West US 2"
+  resource_group_name = var.rg
+  application_type = "web"
 }
 
 resource "azurerm_app_service_plan" "webjob" {
@@ -130,14 +133,15 @@ resource "azurerm_app_service" "webjob" {
   resource_group_name = data.azurerm_resource_group.webjob.name
   app_service_plan_id = azurerm_app_service_plan.webjob.id
   app_settings        = {
-                          EventHubConnectionString = data.azurerm_eventhub_namespace.webjob.default_primary_connection_string,
-                          PartitionStatusTableName = "PartitionStatus",
-                          StorageConnectionString = azurerm_storage_account.webjob.primary_connection_string,
-                          StorageContainerName = "event-metadata",
+                          APPINSIGHTS_INSTRUMENTATIONKEY = "${azurerm_application_insights.webjob.instrumentation_key}"
+                          EventHubConnectionString = data.azurerm_eventhub_namespace.webjob.default_primary_connection_string
+                          PartitionStatusTableName = "PartitionStatus"
+                          StorageConnectionString = azurerm_storage_account.webjob.primary_connection_string
+                          StorageContainerName = "event-metadata"
                           Settings__DbConnection="Server=tcp:${azurerm_sql_server.webjob.fully_qualified_domain_name},1433;Initial Catalog=${azurerm_sql_database.webjob.name};Persist Security Info=False;User ID=${azurerm_sql_server.webjob.administrator_login};Password=${azurerm_sql_server.webjob.administrator_login_password};MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;"
-                          Settings__Delay = 1,
-                          Settings__SkipAll = false,
-                          Settings__TestRun = 1,
+                          Settings__Delay = 1
+                          Settings__SkipAll = false
+                          Settings__TestRun = 1
                           "Logging:LogLevel:Default" = "Trace"
                         }
 }
