@@ -389,3 +389,5 @@ override.tf.json
 # example: *tfplan*
 
 local.settings.json
+
+.DS_Store
