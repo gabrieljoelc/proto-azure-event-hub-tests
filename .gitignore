@@ -391,3 +391,6 @@ override.tf.json
 local.settings.json
 
 .DS_Store
+
+.deploy/
+deploy.zip
