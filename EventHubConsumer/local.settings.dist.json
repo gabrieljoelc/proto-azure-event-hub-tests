@@ -7,7 +7,7 @@
   "Redis": "http://localhost:6379",
   "Settings__Delay": 0,
   "Settings__SkipAll": true,
-  "Settings__TestRun": 7,
+  "Settings__TestRun": 1,
   "Settings__DbConnection": "Data Source=(LocalDb)\\MSSQLLocalDB;Initial Catalog=ehconsumer-db-server;Integrated Security=SSPI;",
   "Logging": {
     "LogLevel": {
