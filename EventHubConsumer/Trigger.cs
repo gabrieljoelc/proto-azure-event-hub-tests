@@ -47,10 +47,9 @@ namespace EventHubConsumer
         {
             Log = logger;
             Settings = config.Value;
-            Log.LogTrace("delay: {delay}, skipall: {skipall}, db: {db}, testrun: {testrun}",
+            Log.LogTrace("delay: {delay}, skipall: {skipall}, testrun: {testrun}",
                 Settings.Delay,
                 Settings.SkipAll,
-                Settings.DbConnection,
                 Settings.TestRun);
         }
 
@@ -101,10 +100,11 @@ namespace EventHubConsumer
             if (Settings.SkipAll) return;
             var body = Encoding.UTF8.GetString(message.Body);
             Log.LogInformation(
-            "Partition key: {partitionKey}, enqueued time: {enqueuedTime}, offset: {offset}, sequence number: {sequenceNumber}, body: {body}",
-            message.SystemProperties.PartitionKey, message.SystemProperties.EnqueuedTimeUtc,
-            message.SystemProperties.Offset,
-            message.SystemProperties.SequenceNumber, body);
+                "Partition key: {partitionKey}, enqueued time: {enqueuedTime}, offset: {offset}, sequence number: {sequenceNumber}, body: {body}",
+                message.SystemProperties.PartitionKey,
+                message.SystemProperties.EnqueuedTimeUtc,
+                message.SystemProperties.Offset,
+                message.SystemProperties.SequenceNumber, body);
             await Task.Delay(Settings.Delay);
             //await db.ListRightPushAsync(
             //    //$"events:{message.SystemProperties.PartitionKey},timestamp:{DateTime.UtcNow.ToString("mm:ss.ffffff tt")},enqueue:{message.SystemProperties.EnqueuedTimeUtc.ToString("mm:ss.ffffff tt")},origCounter:{message.Properties["counter"]}",
