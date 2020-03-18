@@ -27,9 +27,9 @@ EventHubConsumer/deploy.sh
 az webapp webjob continuous stop -w ehconsumer -g sandbox-resource-group -n ehconsumer
 ```
 4. Generate 10,000 events
-5. Increment `Settings__TestRun` in app settings
+5. Increment `Settings:TestRun` in app settings
 ```
-az webapp config appsettings set -g sandbox-resource-group -n ehconsumer --settings Settings__TestRun=2
+az webapp config appsettings set -g sandbox-resource-group -n ehconsumer --settings Settings:TestRun=2
 ```
 6. Scale out app service instances to desired n+1 count for test - via Azure Portal or Terraform
 7. Start web job

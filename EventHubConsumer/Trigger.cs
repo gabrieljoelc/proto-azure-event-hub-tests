@@ -5,6 +5,7 @@ using Medumo.WebJobs.Extensions.EventHub.Binding;
 using Microsoft.Azure.EventHubs;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 using StackExchange.Redis;
 using System.Linq;
 using System;
@@ -12,7 +13,7 @@ using System.Data;
 
 namespace EventHubConsumer
 {
-    internal class Settings
+    public class Settings
     {
         public int Delay { get; set; }
         public bool SkipAll { get; set; }
@@ -42,10 +43,15 @@ namespace EventHubConsumer
         //private static ConnectionMultiplexer redis = ConnectionMultiplexer.Connect("localhost");
         //private static IDatabase db = redis.GetDatabase();
 
-        public Trigger(ILogger<Trigger> logger, IConfiguration config)
+        public Trigger(ILogger<Trigger> logger, IOptions<Settings> config)
         {
             Log = logger;
-            Settings = config.ToSettings();
+            Settings = config.Value;
+            Log.LogTrace("delay: {delay}, skipall: {skipall}, db: {db}, testrun: {testrun}",
+                Settings.Delay,
+                Settings.SkipAll,
+                Settings.DbConnection,
+                Settings.TestRun);
         }
 
         //public async Task Run([SafeEventHubTrigger("testhub32", Connection = "EventHubConnectionString")]

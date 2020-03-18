@@ -147,15 +147,16 @@ resource "azurerm_app_service" "webjob" {
                           PartitionStatusTableName       = "PartitionStatus"
                           StorageConnectionString        = azurerm_storage_account.webjob.primary_connection_string
                           StorageContainerName           = "event-metadata"
-                          Settings__DbConnection         = "Server=tcp:${azurerm_sql_server.webjob.fully_qualified_domain_name},1433;Initial Catalog=${azurerm_sql_database.webjob.name};Persist Security Info=False;User ID=${azurerm_sql_server.webjob.administrator_login};Password=${azurerm_sql_server.webjob.administrator_login_password};MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;"
-                          Settings__Delay                = 1
-                          Settings__SkipAll              = false
-                          Settings__TestRun              = 1
+                          "Settings:DbConnection"        = "Server=tcp:${azurerm_sql_server.webjob.fully_qualified_domain_name},1433;Initial Catalog=${azurerm_sql_database.webjob.name};Persist Security Info=False;User ID=${azurerm_sql_server.webjob.administrator_login};Password=${azurerm_sql_server.webjob.administrator_login_password};MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;"
+                          "Settings:Delay"               = 1
+                          "Settings:SkipAll"             = false
+                          "Settings:TestRun"             = 1
                           SnapshotDebugger_EXTENSION_VERSION         = "toignore"
                           "Logging:LogLevel:Default"     = "Trace"
                           XDT_MicrosoftApplicationInsights_BaseExtensions = "toignore"
                           XDT_MicrosoftApplicationInsights_Mode      = "toignore"
                         }
+
   lifecycle {
     ignore_changes = [
       app_settings["APPINSIGHTS_PROFILERFEATURE_VERSION"],

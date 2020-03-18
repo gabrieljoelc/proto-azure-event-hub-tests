@@ -8,10 +8,12 @@
   "StorageConnectionString": "UseDevelopmentStorage=true",
   "StorageContainerName": "event-metadata",
   "Redis": "http://localhost:6379",
-  "Settings__Delay": 0,
-  "Settings__SkipAll": true,
-  "Settings__TestRun": 1,
-  "Settings__DbConnection": "Data Source=(LocalDb)\\MSSQLLocalDB;Initial Catalog=ehconsumer-db-server;Integrated Security=SSPI;",
+  "Settings": {
+    "DbConnection": "Data Source=(LocalDb)\\MSSQLLocalDB;Initial Catalog=ehconsumer-db-server;Integrated Security=SSPI;",
+    "Delay": 0,
+    "SkipAll": true,
+    "TestRun": 1
+  },
   "Logging": {
     "LogLevel": {
       "Default": "Trace"

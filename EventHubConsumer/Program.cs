@@ -1,8 +1,10 @@
 ﻿using System.Threading.Tasks;
 using Medumo.WebJobs.Extensions.EventHub.Extensions;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 
 namespace EventHubConsumer
 {
@@ -22,6 +24,12 @@ namespace EventHubConsumer
                     builder
                         .AddAzureStorageCoreServices()
                         .AddSafeEventHubs();
+
+                    builder.Services.AddOptions<Settings>()
+                        .Configure<IConfiguration>((settings, config) =>
+                            {
+                                config.GetSection("Settings").Bind(settings);
+                            });
                 })
                 .ConfigureLogging((context, logger) =>
                 {
